@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You 💖</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #ffafbd, #ffc3a0);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    overflow: hidden;
+    cursor: pointer;
+    height: 100vh;
+  }
+
+  #animated-text {
+    font-size: 3rem;
+    color: white;
+    text-align: center;
+    z-index: 3;
+    position: relative;
+    animation: rainbowGlow 3s infinite alternate;
+    transition: transform 0.2s;
+    margin-top: 20px;
+  }
+
+  #animated-text span {
+    display: inline-block;
+    transition: transform 0.3s, color 0.3s;
+  }
+
+  @keyframes rainbowGlow {
+    0% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff9900; }
+    20% { text-shadow: 0 0 5px #ffff00, 0 0 10px #33ff00; }
+    40% { text-shadow: 0 0 5px #00ffcc, 0 0 10px #0066ff; }
+    60% { text-shadow: 0 0 5px #9900ff, 0 0 10px #ff00ff; }
+    80% { text-shadow: 0 0 5px #ff0066, 0 0 10px #ff0000; }
+    100% { text-shadow: 0 0 5px #ff9900, 0 0 10px #ffff00; }
+  }
+
+  .heart, .confetti, .sparkle {
+    position: absolute;
+    pointer-events: none;
+    font-size: 2rem;
+    animation: float 4s linear forwards;
+    z-index: 1;
+  }
+
+  .heart { color: #ff1493; }
+  .confetti { font-size: 1.5rem; }
+  .sparkle { color: #fff; font-size: 1rem; opacity: 0.8; }
+
+  @keyframes float {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Pet styles */
+  #pet {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: url('https://i.imgur.com/7yUvePI.png') no-repeat center/contain;
+    animation: idleBounce 1s infinite alternate ease-in-out;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  @keyframes idleBounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+  }
+
+  @keyframes happyDance {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(-10deg) scale(1.1); }
+    50% { transform: rotate(10deg) scale(1.1); }
+    75% { transform: rotate(-10deg) scale(1.1); }
+  }
+
+  .pet-sparkle {
+    position: absolute;
+    font-size: 1.2rem;
+    animation: sparkleFade 1s forwards;
+    pointer-events: none;
+  }
+
+  @keyframes sparkleFade {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="animated-text">Hey [Her Name], you’re amazing!</div>
+<div id="pet"></div>
+
+<script>
+  const text = document.getElementById('animated-text');
+
+  // Animated letter reveal
+  const message = text.innerText;
+  text.innerText = '';
+  const spans = [];
+  for (let i = 0; i < message.length; i++) {
+    const span = document.createElement('span');
+    span.innerText = message[i];
+    span.style.opacity = 0;
+    text.appendChild(span);
+    spans.push(span);
+    setTimeout(() => { span.style.opacity = 1; }, i * 100);
+  }
+
+  // Floating hearts
+  function createHeart(x = Math.random() * window.innerWidth) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerText = '❤️';
+    heart.style.left = x + 'px';
+    heart.style.animationDuration = 2 + Math.random() * 3 + 's';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+  }
+  setInterval(createHeart, 300);
+
+  // Hearts follow mouse
+  document.body.addEventListener('mousemove', e => {
+    if (Math.random() < 0.1) createHeart(e.clientX);
+  });
+
+  // Confetti on click
+  function createConfetti(x, y) {
+    const colors = ['💖','💛','💚','💙','💜','✨'];
+    for (let i = 0; i < 10; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.innerText = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.left = x + Math.random()*50 - 25 + 'px';
+      confetti.style.top = y + Math.random()*50 - 25 + 'px';
+      confetti.style.animationDuration = 1 + Math.random()*2 + 's';
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 3000);
+    }
+  }
+  document.body.addEventListener('click', e => createConfetti(e.clientX, e.clientY));
+
+  // Background sparkles
+  function createSparkle() {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.innerText = '✨';
+    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+    sparkle.style.fontSize = 5 + Math.random()*15 + 'px';
+    sparkle.style.animationDuration = 2 + Math.random()*3 + 's';
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 4000);
+  }
+  setInterval(createSparkle, 200);
+
+  // Cursor sparkle trail
+  document.body.addEventListener('mousemove', e => {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.innerText = '✨';
+    sparkle.style.left = e.clientX + Math.random()*10 - 5 + 'px';
+    sparkle.style.top = e.clientY + Math.random()*10 - 5 + 'px';
+    sparkle.style.fontSize = 5 + Math.random()*10 + 'px';
+    sparkle.style.animationDuration = 1 + Math.random()*2 + 's';
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 1000);
+  });
+
+  // Text hover interaction
+  text.addEventListener('mouseenter', () => {
+    spans.forEach((span, i) => {
+      setTimeout(() => {
+        span.style.transform = `translateY(-20px) rotate(${Math.random()*20-10}deg)`;
+        span.style.color = `hsl(${Math.random()*360}, 100%, 75%)`;
+      }, i * 50);
+    });
+  });
+  text.addEventListener('mouseleave', () => {
+    spans.forEach((span, i) => {
+      setTimeout(() => {
+        span.style.transform = `translateY(0) rotate(0deg)`;
+        span.style.color = '';
+      }, i * 50);
+    });
+  });
+
+  // Animated pet setup
+  const pet = document.getElementById('pet');
+  let petX = window.innerWidth / 2;
+  let petY = window.innerHeight / 2;
+  pet.style.left = petX + 'px';
+  pet.style.top = petY + 'px';
+
+  // Smooth follow
+  document.addEventListener('mousemove', e => {
+    const dx = e.clientX - petX - 50;
+    const dy = e.clientY - petY - 50;
+    petX += dx * 0.05;
+    petY += dy * 0.05;
+  });
+
+  // Pet click happy dance
+  pet.addEventListener('click', () => {
+    pet.style.animation = 'happyDance 0.5s infinite';
+    setTimeout(() => {
+      pet.style.animation = 'idleBounce 1s infinite alternate ease-in-out';
+    }, 1000);
+
+    // Pet sparkles
+    for (let i = 0; i < 5; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'pet-sparkle';
+      sparkle.innerText = '✨';
+      sparkle.style.left = (petX + 30 + Math.random() * 40) + 'px';
+      sparkle.style.top = (petY - 10 + Math.random() * 40) + 'px';
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 1000);
+    }
+  });
+
+  // Animation loop for pet movement
+  function animatePet() {
+    pet.style.left = petX + 'px';
+    pet.style.top = petY + 'px';
+    requestAnimationFrame(animatePet);
+  }
+  animatePet();
+</script>
+
+</body>
+</html>
